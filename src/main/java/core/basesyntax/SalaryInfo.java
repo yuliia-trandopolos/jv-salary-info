@@ -11,7 +11,7 @@ public class SalaryInfo {
     private static final int NAME_INDEX = 1;
     private static final int HOURS_INDEX = 2;
     private static final int INCOME_INDEX = 3;
-    private static final String SEPARATOR = "  -  ";
+    private static final String SEPARATOR = " - ";
 
     public String getSalaryInfo(String[] names, String[] data, String dateFrom, String dateTo) {
         LocalDate fromDate = LocalDate.parse(dateFrom.trim(), DATE_FORMATTER);
@@ -20,13 +20,17 @@ public class SalaryInfo {
         int[] salaries = new int[names.length];
 
         for (String record : data) {
-            String[] parts = record.split("\\s+");
+            String[] parts = record.trim().split("\\s+");
+            if (parts.length < 4) {
+                continue;
+            }
+
             LocalDate workDate = LocalDate.parse(parts[DATE_INDEX], DATE_FORMATTER);
-            String employee = parts[NAME_INDEX];
+            String employee = parts[NAME_INDEX].trim();
             int hoursWorked = Integer.parseInt(parts[HOURS_INDEX]);
             int incomePerHour = Integer.parseInt(parts[INCOME_INDEX]);
 
-            if (! workDate.isBefore(fromDate) && ! workDate.isAfter(toDate)) {
+            if (!workDate.isBefore(fromDate) && !workDate.isAfter(toDate)) {
                 for (int i = 0; i < names.length; i++) {
                     if (names[i].equals(employee)) {
                         salaries[i] += hoursWorked * incomePerHour;
